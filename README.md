@@ -149,4 +149,7 @@ plt.show()
   </pre>
 </div>
 
+## Hasil Akhir
+<img src="src/hasil.jpg" />
+
 <div align="center">
