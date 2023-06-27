@@ -37,6 +37,6 @@ df_with_avg_jumlah_penduduk.show()
 </div>
 
 ## Machine Learning Flowchart
-<img src="PPT/Frame 24.png" />
+<img src="docs/flowchart.jpg" />
 
 <div align="center">
