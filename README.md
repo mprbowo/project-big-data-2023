@@ -71,5 +71,5 @@ plt.show()
 </div>
 
 ## diagram heatmap
-<img src="docs/flowchart.jpg" />
+<img src="src/heatmap.jpg" />
 <div align="center">
