@@ -1,5 +1,4 @@
 # project-big-data-2023
-# Scenario 1 Bar Graph
   
 </div>
 
@@ -39,4 +38,38 @@ df_with_avg_jumlah_penduduk.show()
 ## Machine Learning Flowchart
 <img src="docs/flowchart.jpg" />
 
+<p align="justify">
+  pengolahan data dengan cara mengurutkan data berdasarkan tahun secara ascending lalu pivot tabel dengan menggunakan fungsi agregasi mean untuk menggabungkan nilai-nilai yang memiliki tahun yang sama dan hasilnya akan ditampilkan berupa diagram heatmap.
+</p>
+<div>
+  <pre>
+    <code>
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Mengambil data Jawa Barat dari DataFrame
+jawa_barat_df = df_with_avg_jumlah_penduduk.filter(df_with_avg_jumlah_penduduk["kode_provinsi"] == "32")
+
+# Mengurutkan data berdasarkan tahun secara ascending
+jawa_barat_df = jawa_barat_df.orderBy("tahun")
+
+# Mengubah DataFrame menjadi Pandas DataFrame
+jawa_barat_pd = jawa_barat_df.toPandas()
+
+# Pivot tabel dengan menggunakan fungsi agregasi mean untuk menggabungkan nilai-nilai yang memiliki tahun yang sama
+jawa_barat_pivot = jawa_barat_pd.pivot_table(index="tahun", columns="kategori_disabilitas", values="avg_jumlah_penduduk", aggfunc="mean")
+
+# Membuat heatmap menggunakan seaborn
+plt.figure(figsize=(10, 6))
+sns.heatmap(jawa_barat_pivot, cmap="YlGnBu", annot=True, fmt=".2f", linewidths=0.5, cbar=True)
+plt.xlabel("Disability Category")
+plt.ylabel("Year")
+plt.title("Heatmap of Disability Categories in West Java")
+plt.show()
+    </code>
+  </pre>
+</div>
+
+## diagram heatmap
+<img src="docs/flowchart.jpg" />
 <div align="center">
