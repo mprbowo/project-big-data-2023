@@ -152,4 +152,129 @@ plt.show()
 ## Hasil Akhir
 <img src="src/hasil.jpg" />
 
+#Linear Agression
+<p align="justify">
+</p>
+<div>
+  <pre>
+    <code>
+import matplotlib.pyplot as plt
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.regression import LinearRegression
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.sql.functions import col
+
+# Inisialisasi SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+# Membaca data dari file CSV
+df = spark.read.csv("/content/drive/MyDrive/Analisis_Kecacatan/big-data.csv", header=True, inferSchema=True)
+df = df.dropDuplicates().na.drop()
+
+# Menghapus baris dengan nilai kosong atau tidak terdefinisi pada kolom 'tahun'
+df = df.filter(col("tahun").isNotNull())
+
+# Memilih fitur yang akan digunakan dalam model
+feature_columns = ['jumlah_penduduk']
+assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+data = assembler.transform(df)
+
+# Membagi data menjadi training set dan testing set
+(trainingData, testData) = data.randomSplit([0.7, 0.3])
+
+# Memeriksa apakah training dataset tidak kosong
+if trainingData.count() == 0:
+    raise ValueError("Training dataset is empty. Adjust the split ratio or check the data.")
+
+# Membuat objek regresi linier
+lr = LinearRegression(featuresCol="features", labelCol="tahun")
+
+# Melatih model menggunakan training set
+model = lr.fit(trainingData)
+
+# Melakukan prediksi terhadap testing set
+predictions = model.transform(testData)
+
+# Mengumpulkan hasil prediksi dalam format Pandas DataFrame
+predictions_pd = predictions.select("prediction", "tahun").toPandas()
+
+# Membuat diagram scatter plot untuk membandingkan prediksi dengan nilai sebenarnya
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(predictions_pd["tahun"], predictions_pd["prediction"])
+ax.plot([predictions_pd["tahun"].min(), predictions_pd["tahun"].max()],
+        [predictions_pd["tahun"].min(), predictions_pd["tahun"].max()], 'r--')
+ax.set_xlabel("Tahun Sebenarnya")
+ax.set_ylabel("Prediksi Tahun")
+ax.set_title("Diagram Scatter Plot Regresi Linier")
+plt.show()
+    </code>
+  </pre>
+</div>
+
+<img src="src/linear1.jpg" />
+
+<p align="justify">
+</p>
+<div>
+  <pre>
+    <code>
+import matplotlib.pyplot as plt
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.regression import LinearRegression
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.sql.functions import col
+
+# Inisialisasi SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+# Membaca data dari file CSV
+df = spark.read.csv("/content/drive/MyDrive/Analisis_Kecacatan/big-data.csv", header=True, inferSchema=True)
+df = df.dropDuplicates().na.drop()
+
+# Menghapus baris dengan nilai kosong atau tidak terdefinisi pada kolom 'kode_kabupaten_kota'
+df = df.filter(col("kode_kabupaten_kota").isNotNull())
+
+# Memilih fitur yang akan digunakan dalam model
+feature_columns = ['jumlah_penduduk']
+assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+data = assembler.transform(df)
+
+# Membagi data menjadi training set dan testing set
+(trainingData, testData) = data.randomSplit([0.7, 0.3])
+
+# Memeriksa apakah training dataset tidak kosong
+if trainingData.count() == 0:
+    raise ValueError("Training dataset is empty. Adjust the split ratio or check the data.")
+
+# Membuat objek regresi linier
+lr = LinearRegression(featuresCol="features", labelCol="kode_kabupaten_kota")
+
+# Melatih model menggunakan training set
+model = lr.fit(trainingData)
+
+# Melakukan prediksi terhadap testing set
+predictions = model.transform(testData)
+
+# Mengumpulkan hasil prediksi dalam format Pandas DataFrame
+predictions_pd = predictions.select("prediction", "kode_kabupaten_kota").toPandas()
+
+# Membuat diagram scatter plot untuk membandingkan prediksi dengan nilai sebenarnya
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(predictions_pd["kode_kabupaten_kota"], predictions_pd["prediction"])
+ax.plot([predictions_pd["kode_kabupaten_kota"].min(), predictions_pd["kode_kabupaten_kota"].max()],
+        [predictions_pd["kode_kabupaten_kota"].min(), predictions_pd["kode_kabupaten_kota"].max()], 'r--')
+ax.set_xlabel("Kode Kabupaten/Kota Sebenarnya")
+ax.set_ylabel("Prediksi Kode Kabupaten/Kota")
+ax.set_title("Diagram Scatter Plot Regresi Linier")
+plt.show()
+    </code>
+  </pre>
+</div>
+
+<img src="src/linear2.jpg" />
+
 <div align="center">
